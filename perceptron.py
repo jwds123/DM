@@ -144,16 +144,26 @@ class DualPerceptron(object):
         self.a, self.b = [0] * num_samples, 0
         # 初始化weight
         self.w = np.zeros((1, num_features))
-        #self.errors=[]
-        ## M 存储每次处理后依旧处于误分类的原始数据
-        M=[]
+        #M是误分类项的迭代次数矩阵，迭代次数越多说明该项距离超平面越近，对分类结果影响就越大
+        '''
+        当使用feature 0,1时，效果不好
+        第1个值第277次迭代
+        第69个值第199次迭代
+        第1个值第278次迭代
+        第69个值第200次迭代
+        第11个值第100次迭代
+
+        '''
+        M=[0]*num_samples
         i = 0
         while i < num_samples:
             if self.judge(X, y, i) <= 0:
+                M[i] += 1
+                print('第%d个值第%d次迭代'%(i,M[i]))
                 self.a[i] += self.eta
                 self.b += self.eta*y[i]
-                #M.append()
                 i = 0
+
             else:
                 i += 1
 
@@ -215,6 +225,8 @@ class DualPerceptron(object):
 
 def main():
     iris = load_iris()
+    #X = iris.data[:100, [1,2]]
+    # X = iris.data[:100, [0,1]]
     X = iris.data[:100, [0, 2]]
     y = iris.target[:100]
     y = np.where(y == 1, 1, -1)
@@ -223,9 +235,9 @@ def main():
     # ppn = Perceptron(eta=0.1, n_iter=10)
     # ppn.fit(X_train, y_train)
     # ppn.plot_decision_regions(X_test, y_test)
-    ppn = DualPerceptron(eta=0.01)
-    ppn.fit(X_train, y_train)
-    ppn.plot_decision_regions(X_test, y_test)
+    dppn = DualPerceptron(eta=0.1)
+    dppn.fit(X_train, y_train)
+    dppn.plot_decision_regions(X_test, y_test)
 
 
 

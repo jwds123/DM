@@ -168,7 +168,7 @@ class DualPerceptron(object):
                 i += 1
 
         for j in range(num_samples):
-            self.w += self.a[j] * X[j] * y[j]
+            self.w += self.a[j] * X[j] * y[j]#有两列，w.shape=(1,2)
 
 
         return self
